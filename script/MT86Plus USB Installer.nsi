@@ -1,11 +1,11 @@
 ; Memtest 86+ USB Installer (v6+) by Samuel DEMEULEMEESTER, adapted from original
 ; Memtest 86+ USB Installer (v5 and previous) created by Lance http://www.pendrivelinux.com
 ; Syslinux 1994-2014 H. Peter Anvin https://wiki.syslinux.org/ (unmodified binary used)
-; Memtest86+ 2004-2022 https://memtest.org (unmodified binary image used)
+; Memtest86+ 2004-2025 https://memtest.org (unmodified binary image used)
 ; NSIS Installer 1995-2022 Contributors https://nsis.sourceforge.io/
 ; You need to install NSIS to compile this script.
 
-!define VERSION "6.00 Beta 1"
+!define VERSION "8.00"
 !define NAME "Memtest86+ ${VERSION} USB Installer"
 !define DISTRO "Memtest86+ Boot Files"
 !define FILENAME "MT86Plus USB Installer"
@@ -73,7 +73,7 @@ LangString License_Subtitle ${LANG_ENGLISH} "Please review the license terms bef
 LangString License_Text_Top ${LANG_ENGLISH} "The software within this program falls under the following License."
 LangString License_Text_Bottom ${LANG_ENGLISH} "You must accept the terms of this License agreement to run ${NAME}. If you agree, Click I Agree to Continue."
 LangString Finish_Title ${LANG_ENGLISH} "Memtest86+ ${VERSION} installed on USB Drive."
-LangString Finish_Text ${LANG_ENGLISH} "The necessary files are installed on your USB drive and the drive is now bootable.$\r$\n$\r$\nWARNING: Memtest86+ ${VERSION} is not compatible with Secure Boot. Disable it from your BIOS options before trying to boot on this USB Drive"
+LangString Finish_Text ${LANG_ENGLISH} "The necessary files are installed on your USB drive and the drive is now bootable.$\r$\n$\r$\nWARNING: Memtest86+ ${VERSION} is not signed by Microsoft for Secure Boot. Disable it from your BIOS options before trying to boot on this USB Drive"
 LangString Finish_Link ${LANG_ENGLISH} "Visit the Official Memtest86+ Site"
 LangString DrivePage_Title ${LANG_ENGLISH} "Choose USB drive location"
 LangString DrivePage_Title2 ${LANG_ENGLISH} "Choose the USB drive in which to make bootable."
@@ -159,13 +159,13 @@ FunctionEnd
 Section "Copyfiles" main
   Call FormatYes ; Format the Drive?
   InitPluginsDir
-  File /oname=$PLUGINSDIR\memtest32.efi "memtest32.efi"
-  File /oname=$PLUGINSDIR\memtest64.efi "memtest64.efi"
+  File /oname=$PLUGINSDIR\mt86plus32 "mt86plus32"
+  File /oname=$PLUGINSDIR\mt86plus64 "mt86plus64"
+  File /oname=$PLUGINSDIR\mt86plusla64.efi "mt86plusla64.efi"
   File /oname=$PLUGINSDIR\Readme.txt "Readme.txt"
   File /oname=$PLUGINSDIR\license.txt "license.txt"
   File /oname=$PLUGINSDIR\syslinux.exe "syslinux.exe"
   File /oname=$PLUGINSDIR\syslinux.cfg "syslinux.cfg"
-  File /oname=$PLUGINSDIR\memtest32.bin "memtest32.bin"
   SetShellVarContext all
 
 ; Execute syslinux on the drive
@@ -186,9 +186,10 @@ Section "Copyfiles" main
 
   DetailPrint $(Syslinux_Creation)
   CopyFiles "$PLUGINSDIR\syslinux.cfg" "$BootDir\syslinux.cfg"
-  CopyFiles "$PLUGINSDIR\memtest32.bin" "$BootDir\mt86plus"
+  CopyFiles "$PLUGINSDIR\mt86plus32" "$BootDir\mt86plus"
   CopyFiles "$PLUGINSDIR\Readme.txt" "$BootDir\Readme.txt"
   CopyFiles "$PLUGINSDIR\license.txt" "$BootDir\license.txt"
-  CopyFiles "$PLUGINSDIR\memtest32.efi" "$BootDir\efi\boot\bootia32.efi"
-  CopyFiles "$PLUGINSDIR\memtest64.efi" "$BootDir\efi\boot\bootx64.efi"
+  CopyFiles "$PLUGINSDIR\mt86plus32" "$BootDir\EFI\BOOT\BOOTIA32.EFI"
+  CopyFiles "$PLUGINSDIR\mt86plus64" "$BootDir\EFI\BOOT\BOOTx64.EFI"
+  CopyFiles "$PLUGINSDIR\mt86plusla64.efi" "$BootDir\EFI\BOOT\BOOTLOONGARCH64.efi"
 SectionEnd
